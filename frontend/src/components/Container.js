@@ -1,6 +1,5 @@
-import {ThemeProvider} from "react-bootstrap";
-import NavBar from "./NavBar";
-import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
+
+import {Route, Routes, useNavigate} from "react-router-dom";
 import PostList from "./PostList";
 import Post from "./Post";
 import NewPost from "./NewPost";

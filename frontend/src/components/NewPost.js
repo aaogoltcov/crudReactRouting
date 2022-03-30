@@ -1,6 +1,6 @@
 import {Form, Button} from "react-bootstrap";
 import {useEffect, useState} from "react";
-import {Navigate, useLocation, useParams, useSearchParams} from "react-router-dom";
+import {Navigate} from "react-router-dom";
 import SendNewPost from "../services/SendNewPost";
 
 export default function NewPost(props) {

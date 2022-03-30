@@ -2,7 +2,6 @@ import Post from "./Post";
 import shortid from 'shortid';
 import GetPosts from "../services/GetPosts";
 import {useEffect, useState} from "react";
-import {Outlet} from "react-router-dom";
 
 export default function PostList(props) {
     const [postList, setPostList] = useState([]);
@@ -17,19 +16,14 @@ export default function PostList(props) {
         setPostList([post.post]);
     }
 
-    function PostDeleteEventHandle(value) {
-        console.log("postDelete", value, postDelete);
+    function PostDeleteEventHandle() {
         setPostDelete(true);
-        console.log("postDelete", value, postDelete);
+        window.location.reload();
     }
 
     useEffect(() => {
-        console.log("Post list use effect: ", postView, postDelete);
+        console.log("PostView use effect: ", postView);
     }, [postView]);
-
-    useEffect(() => {
-        console.log("PostDelete use effect: ", postView, postDelete);
-    }, [postDelete]);
 
     return (
         <>
@@ -41,7 +35,6 @@ export default function PostList(props) {
                 postEditCallback={props.postEditCallback}
                 postDeleteCallback={PostDeleteEventHandle}
             />})}
-            <Outlet element={postList}/>
         </>
 
     );
