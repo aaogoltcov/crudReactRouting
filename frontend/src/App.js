@@ -1,26 +1,22 @@
 import './App.css';
-import {  BrowserRouter,  Routes,  Route, } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Container from "./components/Container";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {ThemeProvider} from "react-bootstrap";
 import NavBar from "./components/NavBar";
 import PostList from "./components/PostList";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import NewPost from "./components/NewPost";
-import {ThemeProvider} from "react-bootstrap";
 import Post from "./components/Post";
+import NewPost from "./components/NewPost";
 
 function App() {
   return (
       <BrowserRouter>
-          <ThemeProvider
-              breakpoints={['sm',]}
-          >
-              <NavBar />
-              <Routes>
-                  <Route exact path="/" element={<PostList />}>
-                      <Route path=":postId" element={<Post />} />
-                  </Route>
-                  <Route path="/newPost" element={<NewPost />} />
-              </Routes>
-          </ThemeProvider>
+        <ThemeProvider
+            breakpoints={['sm',]}
+        >
+          <NavBar />
+          <Container />
+        </ThemeProvider>
       </BrowserRouter>
   );
 }

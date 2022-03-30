@@ -1,8 +1,10 @@
 import {Form, Button} from "react-bootstrap";
 import {useEffect, useState} from "react";
-import { Navigate  } from "react-router-dom";
+import {Navigate, useLocation, useParams, useSearchParams} from "react-router-dom";
+import SendNewPost from "../services/SendNewPost";
 
-export default function NewPost() {
+export default function NewPost(props) {
+    const [id, setId] = useState(0);
     const [postTitle, setTitlePost] = useState(String());
     const [postText, setPostText] = useState(String());
     const [isLoading, setLoading] = useState(false);
@@ -11,32 +13,26 @@ export default function NewPost() {
     const [isRedirect, setIsRedirect] = useState(false);
 
     useEffect(() => {
-        if (!isPostSent) {
-            setLoading(true);
-            const request = setTimeout(async () => {
-                await fetch('http://localhost:7779/posts', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json;charset=utf-8'
-                    },
-                    body: JSON.stringify({
-                        id: 0,
-                        content: {
-                            title: postTitle,
-                            text: postText,
-                        },
-
-                    }),
-                });
-                setIsPostSent(true);
-                setLoading(false);
-                setTitlePost(String());
-                setPostText(String());
-                setIsRedirect(true);
-            }, 3000);
-            return () => clearTimeout(request);
+        if (typeof props.post.content !== 'undefined') {
+            setId(props.post.id);
+            setTitlePost(props.post.content.title);
+            setPostText(props.post.content.text);
         }
-    }, [buttonSubmit])
+    }, [props])
+
+    SendNewPost(
+        'http://localhost:7779/posts',
+        isPostSent,
+        setLoading,
+        postTitle,
+        postText,
+        setIsPostSent,
+        setTitlePost,
+        setPostText,
+        setIsRedirect,
+        buttonSubmit,
+        id,
+    )
 
     function requestSendNewPostHandle(event) {
         event.preventDefault();

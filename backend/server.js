@@ -9,16 +9,7 @@ const app = new Koa();
 app.use(cors());
 app.use(koaBody({json: true}));
 
-let posts = [
-    {
-        id: 1,
-        content: {
-            title: "Title",
-            text: "Text text text text text text text text text",
-        },
-        created: Date.now(),
-    },
-];
+let posts = [];
 let nextId = 1;
 
 const router = new Router();
@@ -43,6 +34,7 @@ router.post('/posts', async(ctx, next) => {
 
 router.delete('/posts/:id', async(ctx, next) => {
     const postId = Number(ctx.params.id);
+    console.log('Delete: ', postId);
     const index = posts.findIndex(o => o.id === postId);
     if (index !== -1) {
         posts.splice(index, 1);

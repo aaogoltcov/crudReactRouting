@@ -1,49 +1,47 @@
 import Post from "./Post";
-import {useEffect, useState} from "react";
 import shortid from 'shortid';
-import {useParams} from "react-router-dom";
+import GetPosts from "../services/GetPosts";
+import {useEffect, useState} from "react";
+import {Outlet} from "react-router-dom";
 
-export default function PostList() {
+export default function PostList(props) {
     const [postList, setPostList] = useState([]);
     const [isLoading, setLoading] = useState(true);
-    let { postId } = useParams();
+    const [postView, setPostView] = useState(false);
+    const [postDelete, setPostDelete] = useState(false);
 
-    console.log("postId", postId)
-    console.log("postId", postId && Object.fromEntries(Object.entries(postList).filter(([k, v]) => k === postId)));
+    GetPosts('http://localhost:7779/posts', setPostList, setLoading);
+
+    function PostClickEventHandle(post) {
+        setPostView(true);
+        setPostList([post.post]);
+    }
+
+    function PostDeleteEventHandle(value) {
+        console.log("postDelete", value, postDelete);
+        setPostDelete(true);
+        console.log("postDelete", value, postDelete);
+    }
 
     useEffect(() => {
-        console.log("First use effect");
-        setLoading(true);
-        const request = setTimeout(async () => {
-            const response = await fetch('http://localhost:7779/posts', {method: 'GET'})
-                .then(response => response.json());
-            setPostList(response);
-            setLoading(false);
-        }, 0);
-        return () => clearTimeout(request);
-    }, [])
+        console.log("Post list use effect: ", postView, postDelete);
+    }, [postView]);
 
-    // useEffect(async () => {
-    //     console.log("Second use effect");
-    //     const postItem = [Object.fromEntries(Object.entries(postList).filter(([k, v]) => k === postId))];
-    //     await setPostList(postItem);
-    //     console.log("item", Object.fromEntries(Object.entries(postList).filter(([k, v]) => k === postId)));
-    //     console.log("item", postList);
-    // }, [postId])
-
-    const postClickHandle = (event) => {
-        console.log("click", event.target.id);
-        // setPostList([Object.fromEntries(Object.entries(postList).filter(([k, v]) => k === id))]);
-    }
+    useEffect(() => {
+        console.log("PostDelete use effect: ", postView, postDelete);
+    }, [postDelete]);
 
     return (
         <>
             {isLoading && <h3 className="w-50 m-4 g-4">Loading...</h3>}
-            {/*{postId && <Post key={shortid.generate()} post={*/}
-            {/*    Object.fromEntries(Object.entries(postList).filter(([k, v]) => k === postId))*/}
-            {/*}/>}*/}
-            {/*{!postId && postList.map(post => {return <Post key={shortid.generate()} post={post}/>})}*/}
-            {postList.map(post => {return <Post key={shortid.generate()} post={post} onClick={postClickHandle}/>})}
+            {postList.map(post => {return <Post
+                key={shortid.generate()}
+                post={post}
+                postClickFunc={PostClickEventHandle}
+                postEditCallback={props.postEditCallback}
+                postDeleteCallback={PostDeleteEventHandle}
+            />})}
+            <Outlet element={postList}/>
         </>
 
     );
